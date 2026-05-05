@@ -12,7 +12,7 @@ Outras informacoes importantes sobre o cli; nosso aplicativo.
 
 site		:
 
-Autor		: Caio Aquino <caiotomaz20102008@gmail.com>
+Autor		: Caio <caiotomaz20102008@gmail.com>
 
 Manutencao	: 
 
