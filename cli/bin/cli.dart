@@ -10,10 +10,14 @@ cli.dart - Fica localizado na pasta dartpedia, em /dartpedia/cli/bin.
 
 Outras informacoes importantes sobre o cli; nosso aplicativo.
 
-site		:
+
+caio lindo e bom de codigo
 
 Autor		: Caio idiota <caiotomaz20102008@gmail.com>
+=======
+>>>>>>> b73b9458ab69d5fada3bd6555d7c4f91fb52241d
 
+Autor		: Caioperelherinha <caiotomaz20102008@gmail.com>
 Manutencao	: 
 
 -------------------------------------------------------------------------------
