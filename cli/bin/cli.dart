@@ -530,3 +530,30 @@ Saida ao executar o codigo:
 dart run wikipedia testeinexistente
 WikipediaException:
 Artigo nao encontrado.
+
+Versao: 0.0.8
+Data: 02/06/2026
+Descricao da atualizacao: Implementacao de enums e extensoes.
+Objetivo:
+Adicionar recursos avancados de POO.
+Codigo:
+enum ConsoleColor {
+red('\x1B[31m'),
+green('\x1B[32m'),
+yellow('\x1B[33m'),
+reset('\x1B[0m');
+final String code;
+const ConsoleColor(this.code);
+}
+void printColor(
+String text,
+ConsoleColor color,
+) {
+print(
+'${color.code}$text${ConsoleColor.reset.code}'
+);
+}
+Saida ao executar o codigo:
+Busca realizada com sucesso!
+Obs.:
+A mensagem pode aparecer colorida.
