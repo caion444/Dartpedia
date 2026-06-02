@@ -297,7 +297,7 @@ void printUsage() { // <-- Adicionado esta funcao na versao '0.0.3' e '0.0.4'
 
 // ---------------------------------------------------------------------------
 */
-
+/*
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -385,4 +385,78 @@ Exemplo:
   dart run bin/cli.dart wikipedia "Dart_(programming_language)"
 ''');
 }
+
+/*
  
+ ---
+
+Versao: 0.0.5
+
+Data: xx/xx/2026
+
+Descricao da atualizacao: Introducao a Programacao Orientada a Objetos (POO) para estruturar o Dartpedia CLI.
+
+Objetivo:
+Criar uma base mais organizada para o aplicativo utilizando conceitos de orientacao a objetos, incluindo classes abstratas, heranca, sobrescrita de metodos e enumeracoes.
+
+Implementacoes:
+
+1. Criacao da classe abstrata Command.
+2. Definicao de um contrato para todos os comandos da aplicacao.
+3. Implementacao de classes concretas HelpCommand e VersionCommand.
+4. Utilizacao de heranca para reaproveitamento de codigo.
+5. Utilizacao de sobrescrita de metodos com @override.
+6. Criacao de enum para representar os tipos de comando disponiveis.
+7. Estruturacao inicial da arquitetura do CLI.
+
+Codigo implementado:
+
+enum CommandType {
+help,
+version,
+search
+}
+
+abstract class Command {
+String get name;
+
+void run();
+}
+
+class HelpCommand extends Command {
+@override
+String get name => 'help';
+
+@override
+void run() {
+print('Exibindo ajuda...');
+}
+}
+
+class VersionCommand extends Command {
+@override
+String get name => 'version';
+
+@override
+void run() {
+print('Dartpedia CLI version 0.0.5');
+}
+}
+
+Saida ao executar o codigo:
+
+dart run help
+
+Exibindo ajuda...
+
+Saida ao executar o codigo:
+
+dart run version
+
+Dartpedia CLI version 0.0.5
+
+Obs. Importante:
+Esta versao teve como principal objetivo preparar a arquitetura do Dartpedia para o crescimento futuro do projeto, utilizando os principios da Programacao Orientada a Objetos.
+
+---
+
