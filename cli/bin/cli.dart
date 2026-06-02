@@ -557,3 +557,197 @@ Saida ao executar o codigo:
 Busca realizada com sucesso!
 Obs.:
 A mensagem pode aparecer colorida.
+/*
+
+
+
+versao completa
+
+*/
+
+import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
+
+const version = '1.0.0';
+
+// =========================
+// EXCEÇÃO PERSONALIZADA (Lição 06)
+// =========================
+class CommandException implements Exception {
+  final String message;
+
+  CommandException(this.message);
+
+  @override
+  String toString() => 'Erro: $message';
+}
+
+// =========================
+// ENUM COM CORES (Lição 07)
+// =========================
+enum ConsoleColor {
+  red('\x1B[31m'),
+  green('\x1B[32m'),
+  yellow('\x1B[33m'),
+  blue('\x1B[34m'),
+  reset('\x1B[0m');
+
+  final String code;
+  const ConsoleColor(this.code);
+}
+
+// =========================
+// EXTENSION (Lição 07)
+// =========================
+extension ColoredText on String {
+  String color(ConsoleColor color) {
+    return '${color.code}$this${ConsoleColor.reset.code}';
+  }
+}
+
+// =========================
+// MAIN
+// =========================
+Future<void> main(List<String> arguments) async {
+  try {
+    if (arguments.isEmpty || arguments.first == 'help') {
+      printUsage();
+    } else if (arguments.first == 'version') {
+      print(
+        'Dartpedia CLI version $version'
+            .color(ConsoleColor.green),
+      );
+    } else if (arguments.first == 'search' ||
+        arguments.first == 'wikipedia') {
+      final inputArgs =
+          arguments.length > 1 ? arguments.sublist(1) : null;
+
+      await searchWikipedia(inputArgs);
+    } else {
+      throw CommandException(
+        'Comando "${arguments.first}" não reconhecido.',
+      );
+    }
+  } on CommandException catch (e) {
+    print(e.toString().color(ConsoleColor.red));
+    printUsage();
+  } catch (e) {
+    print(
+      'Erro inesperado: $e'
+          .color(ConsoleColor.red),
+    );
+  }
+}
+
+// =========================
+// PESQUISA WIKIPEDIA
+// =========================
+Future<void> searchWikipedia(
+  List<String>? arguments,
+) async {
+  final String articleTitle;
+
+  if (arguments == null || arguments.isEmpty) {
+    stdout.write('Digite o título do artigo: ');
+    final input = stdin.readLineSync();
+
+    if (input == null || input.trim().isEmpty) {
+      throw CommandException(
+        'Título do artigo não informado.',
+      );
+    }
+
+    articleTitle = input;
+  } else {
+    articleTitle = arguments.join(' ');
+  }
+
+  print(
+    '\nBuscando "$articleTitle"...\n'
+        .color(ConsoleColor.yellow),
+  );
+
+  final article =
+      await getWikipediaArticle(articleTitle);
+
+  print(
+    '===== RESUMO ====='
+        .color(ConsoleColor.blue),
+  );
+
+  print(article);
+}
+
+// =========================
+// API WIKIPEDIA + JSON
+// =========================
+Future<String> getWikipediaArticle(
+  String articleTitle,
+) async {
+  final url = Uri.https(
+    'en.wikipedia.org',
+    '/api/rest_v1/page/summary/$articleTitle',
+  );
+
+  final response = await http.get(url);
+
+  if (response.statusCode != 200) {
+    throw CommandException(
+      'Artigo não encontrado ou erro na API.',
+    );
+  }
+
+  final json = jsonDecode(response.body);
+
+  if (json is! Map<String, dynamic>) {
+    throw CommandException(
+      'JSON inválido recebido.',
+    );
+  }
+
+  return json['extract'] ??
+      'Nenhum resumo disponível.';
+}
+
+// =========================
+// AJUDA APRIMORADA (Lição 08)
+// =========================
+void printUsage() {
+  final buffer = StringBuffer();
+
+  buffer.writeln('');
+  buffer.writeln('===== DARTPEDIA CLI =====');
+  buffer.writeln('');
+  buffer.writeln('Comandos disponíveis:');
+  buffer.writeln('  help');
+  buffer.writeln('      Mostra esta ajuda');
+  buffer.writeln('');
+  buffer.writeln('  version');
+  buffer.writeln('      Mostra a versão');
+  buffer.writeln('');
+  buffer.writeln('  search <titulo>');
+  buffer.writeln('      Pesquisa artigo');
+  buffer.writeln('');
+  buffer.writeln('Exemplos:');
+  buffer.writeln('  dart run help');
+  buffer.writeln('  dart run version');
+  buffer.writeln(
+    '  dart run search "Dart_(programming_language)"',
+  );
+
+  print(buffer.toString());
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
