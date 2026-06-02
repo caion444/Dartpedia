@@ -459,4 +459,30 @@ Obs. Importante:
 Esta versao teve como principal objetivo preparar a arquitetura do Dartpedia para o crescimento futuro do projeto, utilizando os principios da Programacao Orientada a Objetos.
 
 ---
+Versao: 0.0.6
+Data: xx/xx/2026
+Descricao da atualizacao: Implementacao do comando de busca.
+Objetivo:
+Criar o comando wikipedia para realizar consultas na Wikipedia.
+Codigo:
+const version = '0.0.6';
+void main(List arguments) {
+if (arguments.isEmpty || arguments.first == 'help') {
+printUsage();
+} else if (arguments.first == 'version') {
+print('Dartpedia CLI version $version');
+} else if (arguments.first == 'wikipedia') {
+final inputArgs =
+arguments.length > 1 ? arguments.sublist(1) : null;
+searchWikipedia(inputArgs);
+}
+}
+void searchWikipedia(List? arguments) {
+print(
+'searchWikipedia received arguments: $arguments'
+);
+}
+Saida ao executar o codigo:
+dart run wikipedia Dart
+searchWikipedia received arguments: [Dart]
 
