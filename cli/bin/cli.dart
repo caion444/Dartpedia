@@ -392,7 +392,7 @@ Exemplo:
 
 Versao: 0.0.5
 
-Data: xx/xx/2026
+Data: 02/06/2026
 
 Descricao da atualizacao: Introducao a Programacao Orientada a Objetos (POO) para estruturar o Dartpedia CLI.
 
@@ -460,7 +460,7 @@ Esta versao teve como principal objetivo preparar a arquitetura do Dartpedia par
 
 ---
 Versao: 0.0.6
-Data: xx/xx/2026
+Data: 2/06/2026
 Descricao da atualizacao: Implementacao do comando de busca.
 Objetivo:
 Criar o comando wikipedia para realizar consultas na Wikipedia.
@@ -486,3 +486,47 @@ Saida ao executar o codigo:
 dart run wikipedia Dart
 searchWikipedia received arguments: [Dart]
 
+Versao: 0.0.7
+
+Data: 02/06/2026
+
+Descricao da atualizacao: Tratamento de erros e excecoes personalizadas.
+
+Objetivo:
+Melhorar a robustez da aplicacao.
+
+Codigo:
+class WikipediaException implements Exception {
+final String message;
+WikipediaException(this.message);
+@override
+String toString() =>
+'WikipediaException: $message';
+}
+Future getWikipediaArticle(
+String articleTitle) async {
+try {
+final url = Uri.https(
+'en.wikipedia.org',
+'/api/rest_v1/page/summary/$articleTitle',
+);
+final response = await http.get(url);
+
+if (response.statusCode == 200) {
+  final data = jsonDecode(response.body);
+  return data['extract'];
+}
+
+throw WikipediaException(
+  'Artigo nao encontrado.'
+);
+} catch (_) {
+throw WikipediaException(
+'Erro ao acessar a Wikipedia.'
+);
+}
+}
+Saida ao executar o codigo:
+dart run wikipedia testeinexistente
+WikipediaException:
+Artigo nao encontrado.
