@@ -296,8 +296,8 @@ void printUsage() { // <-- Adicionado esta funcao na versao '0.0.3' e '0.0.4'
 
 
 // ---------------------------------------------------------------------------
-*/
-/*
+
+
 import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -385,10 +385,7 @@ Exemplo:
   dart run bin/cli.dart wikipedia "Dart_(programming_language)"
 ''');
 }
-
-/*
- 
- ---
+---
 
 Versao: 0.0.5
 
@@ -557,7 +554,7 @@ Saida ao executar o codigo:
 Busca realizada com sucesso!
 Obs.:
 A mensagem pode aparecer colorida.
-/*
+
 
 
 
@@ -733,21 +730,8 @@ void printUsage() {
   buffer.writeln('  dart run help');
   buffer.writeln('  dart run version');
   buffer.writeln(
-    '  dart run search "Dart_(programming_language)"',
+    '  dart run search "Dart_(programming_language)"'
   );
 
   print(buffer.toString());
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
