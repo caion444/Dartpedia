@@ -260,11 +260,6 @@ void printUsage() { // Add this new function
 
 -------------------------------------------------------------------------------
 
-
-
-
-
-
 // Codigo valido ate o momento !!
 
 // Codigo:
@@ -385,7 +380,7 @@ Exemplo:
   dart run bin/cli.dart wikipedia "Dart_(programming_language)"
 ''');
 }
----
+-----------------------------------------------------------------
 
 Versao: 0.0.5
 
@@ -455,7 +450,7 @@ Dartpedia CLI version 0.0.5
 Obs. Importante:
 Esta versao teve como principal objetivo preparar a arquitetura do Dartpedia para o crescimento futuro do projeto, utilizando os principios da Programacao Orientada a Objetos.
 
----
+-------------------------------------------------------------
 Versao: 0.0.6
 Data: 2/06/2026
 Descricao da atualizacao: Implementacao do comando de busca.
@@ -483,6 +478,7 @@ Saida ao executar o codigo:
 dart run wikipedia Dart
 searchWikipedia received arguments: [Dart]
 
+-------------------------------------------------------------
 Versao: 0.0.7
 
 Data: 02/06/2026
@@ -528,6 +524,8 @@ dart run wikipedia testeinexistente
 WikipediaException:
 Artigo nao encontrado.
 
+----------------------------------------------------------------
+
 Versao: 0.0.8
 Data: 02/06/2026
 Descricao da atualizacao: Implementacao de enums e extensoes.
@@ -555,12 +553,9 @@ Busca realizada com sucesso!
 Obs.:
 A mensagem pode aparecer colorida.
 
-
-
+------------------------------------------------------------
 
 versao completa Liçao 10
-
-
 
 import 'dart:convert';
 import 'dart:io';
@@ -735,7 +730,10 @@ void printUsage() {
 
   print(buffer.toString());
 }
-*/
+
+=======================================
+LICÃO 11 - IMPLEMENTAÇÃO DA CAMADA API DA WIKIPEDIA
+=======================================
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -998,3 +996,5 @@ dart run wikipedia Flutter
 =========================
 ''');
 }
+*/
+git
