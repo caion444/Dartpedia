@@ -997,4 +997,313 @@ dart run wikipedia Flutter
 ''');
 }
 */
-git
+
+
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:http/http.dart' as http;
+import 'package:logging/logging.dart';
+
+const version = '1.2.0';
+
+//
+// LOGGER (Lição 12)
+//
+Logger initFileLogger(String name) {
+  hierarchicalLoggingEnabled = true;
+
+  final logger = Logger(name);
+
+  final now = DateTime.now();
+
+  final dir = Directory('logs');
+
+  if (!dir.existsSync()) {
+    dir.createSync();
+  }
+
+  final logFile = File(
+    '${dir.path}/${now.year}_${now.month}_${now.day}_$name.txt',
+  );
+
+  logger.level = Level.ALL;
+
+  logger.onRecord.listen((record) {
+    final msg =
+        '[${record.time} - ${record.loggerName}] '
+        '${record.level.name}: ${record.message}';
+
+    logFile.writeAsStringSync(
+      '$msg\n',
+      mode: FileMode.append,
+    );
+  });
+
+  return logger;
+}
+
+//
+// EXCEPTION
+//
+class CommandException implements Exception {
+  final String message;
+
+  CommandException(this.message);
+
+  @override
+  String toString() => 'Erro: $message';
+}
+
+//
+// MODEL
+//
+class Article {
+  final String title;
+  final String extract;
+
+  Article({
+    required this.title,
+    required this.extract,
+  });
+
+  factory Article.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    return Article(
+      title: json['title'] ?? '',
+      extract: json['extract'] ?? '',
+    );
+  }
+}
+
+//
+// API WIKIPEDIA
+//
+class WikipediaApi {
+  final http.Client client;
+
+  WikipediaApi({
+    http.Client? client,
+  }) : client = client ?? http.Client();
+
+  Future<Article> fetchArticle(
+    String articleTitle,
+  ) async {
+    final uri = Uri.https(
+      'en.wikipedia.org',
+      '/api/rest_v1/page/summary/$articleTitle',
+    );
+
+    final response = await client.get(uri);
+
+    if (response.statusCode != 200) {
+      throw HttpException(
+        'Artigo não encontrado.',
+        uri: uri,
+      );
+    }
+
+    final json =
+        jsonDecode(response.body)
+            as Map<String, dynamic>;
+
+    return Article.fromJson(json);
+  }
+}
+
+//
+// CORES
+//
+enum ConsoleColor {
+  red('\x1B[31m'),
+  green('\x1B[32m'),
+  yellow('\x1B[33m'),
+  blue('\x1B[34m'),
+  reset('\x1B[0m');
+
+  final String code;
+
+  const ConsoleColor(this.code);
+}
+
+//
+// EXTENSION
+//
+extension ColoredText on String {
+  String color(ConsoleColor color) {
+    return '${color.code}$this${ConsoleColor.reset.code}';
+  }
+}
+
+//
+// MAIN
+//
+Future<void> main(
+  List<String> arguments,
+) async {
+  final errorLogger =
+      initFileLogger('errors');
+
+  try {
+    if (arguments.isEmpty ||
+        arguments.first == 'help') {
+      printUsage();
+    } else if (arguments.first ==
+        'version') {
+      print(
+        'Dartpedia CLI version $version'
+            .color(ConsoleColor.green),
+      );
+    } else if (arguments.first ==
+            'search' ||
+        arguments.first ==
+            'wikipedia') {
+      final inputArgs =
+          arguments.length > 1
+              ? arguments.sublist(1)
+              : null;
+
+      await searchWikipedia(
+        inputArgs,
+        errorLogger,
+      );
+    } else {
+      throw CommandException(
+        'Comando não reconhecido.',
+      );
+    }
+  } on CommandException catch (e) {
+    errorLogger.warning(e.message);
+
+    print(
+      e.toString()
+          .color(ConsoleColor.red),
+    );
+  } catch (e, stackTrace) {
+    errorLogger.severe(
+      '$e\n$stackTrace',
+    );
+
+    print(
+      'Erro inesperado: $e'
+          .color(ConsoleColor.red),
+    );
+  }
+}
+
+//
+// PESQUISA
+//
+Future<void> searchWikipedia(
+  List<String>? arguments,
+  Logger logger,
+) async {
+  final String articleTitle;
+
+  if (arguments == null ||
+      arguments.isEmpty) {
+    stdout.write(
+      'Digite o título do artigo: ',
+    );
+
+    final input =
+        stdin.readLineSync();
+
+    if (input == null ||
+        input.trim().isEmpty) {
+      throw CommandException(
+        'Título não informado.',
+      );
+    }
+
+    articleTitle = input;
+  } else {
+    articleTitle =
+        arguments.join(' ');
+  }
+
+  print(
+    '\nBuscando "$articleTitle"...\n'
+        .color(ConsoleColor.yellow),
+  );
+
+  try {
+    final api = WikipediaApi();
+
+    final article =
+        await api.fetchArticle(
+      articleTitle,
+    );
+
+    print(
+      '===== RESULTADO ====='
+          .color(ConsoleColor.blue),
+    );
+
+    print(
+      'Título: ${article.title}\n',
+    );
+
+    print(article.extract);
+
+    logger.info(
+      'Busca realizada com sucesso: $articleTitle',
+    );
+  } on HttpException catch (e) {
+    logger
+      ..warning(e.message)
+      ..warning(e.uri);
+
+    print(
+      'Erro ao acessar Wikipedia'
+          .color(ConsoleColor.red),
+    );
+  } on FormatException catch (e) {
+    logger
+      ..warning(e.message)
+      ..warning(e.source);
+
+    print(
+      'Erro ao processar JSON'
+          .color(ConsoleColor.red),
+    );
+  }
+}
+
+//
+// HELP
+//
+void printUsage() {
+  print('''
+=========================
+DARTPEDIA CLI
+=========================
+
+Comandos:
+
+help
+    Mostra esta ajuda
+
+version
+    Mostra a versão
+
+search <titulo>
+    Pesquisa artigo
+
+wikipedia <titulo>
+    Pesquisa artigo
+
+Exemplos:
+
+dart run bin/cli.dart help
+
+dart run bin/cli.dart version
+
+dart run bin/cli.dart search Dart
+
+dart run bin/cli.dart wikipedia Flutter
+
+=========================
+''');
+}
