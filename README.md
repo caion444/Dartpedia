@@ -4,18 +4,19 @@
 
 O Dartpedia CLI é um aplicativo de linha de comando desenvolvido em Dart que permite pesquisar artigos da Wikipedia diretamente pelo terminal.
 
-O objetivo do projeto foi praticar conceitos da linguagem Dart vistos durante as aulas, como Programação Orientada a Objetos (POO), tratamento de exceções, consumo de APIs, manipulação de JSON e uso de comandos em terminal.
+O projeto foi criado com o objetivo de praticar conceitos estudados durante as aulas, como Programação Orientada a Objetos (POO), consumo de APIs, manipulação de JSON, tratamento de exceções, registro de logs e desenvolvimento de aplicações em linha de comando.
 
 ---
 
 ## O que o programa faz?
 
-O usuário pode executar alguns comandos pelo terminal:
+O usuário pode executar diferentes comandos pelo terminal para:
 
-* Ver a ajuda do programa
-* Ver a versão atual
+* Visualizar a ajuda do sistema
+* Consultar a versão atual
 * Pesquisar artigos da Wikipedia
-* Receber mensagens de erro quando algo estiver errado
+* Receber mensagens de erro amigáveis
+* Registrar erros e eventos em arquivos de log
 
 ---
 
@@ -23,6 +24,7 @@ O usuário pode executar alguns comandos pelo terminal:
 
 * Dart
 * Package HTTP
+* Package Logging
 * API da Wikipedia
 * JSON
 
@@ -36,7 +38,7 @@ Primeiro instale as dependências:
 dart pub get
 ```
 
-Depois execute o projeto:
+Depois execute o programa:
 
 ```bash
 dart run
@@ -48,7 +50,7 @@ dart run
 
 ### Help
 
-Mostra os comandos disponíveis.
+Exibe todos os comandos disponíveis.
 
 ```bash
 dart run help
@@ -56,7 +58,7 @@ dart run help
 
 ### Version
 
-Mostra a versão atual do sistema.
+Exibe a versão atual do sistema.
 
 ```bash
 dart run version
@@ -76,12 +78,14 @@ ou
 dart run wikipedia Dart
 ```
 
-Exemplo de saída:
+### Exemplo de Saída
 
 ```text
 Buscando "Dart"...
 
-===== RESUMO =====
+===== RESULTADO =====
+
+Título: Dart
 
 Dart é uma linguagem de programação...
 ```
@@ -90,42 +94,64 @@ Dart é uma linguagem de programação...
 
 ## Estrutura do Projeto
 
-O sistema foi dividido em algumas partes principais:
-
 ### Main
 
-Responsável por identificar qual comando o usuário digitou e executar a ação correta.
+Responsável por interpretar os comandos digitados pelo usuário e executar as funcionalidades correspondentes.
+
+### Wikipedia API
+
+Realiza a comunicação com a API da Wikipedia e retorna os dados dos artigos pesquisados.
 
 ### Search Wikipedia
 
-Função responsável por realizar a busca do artigo solicitado.
-
-### API da Wikipedia
-
-Realiza a comunicação com a API da Wikipedia e retorna o resumo do artigo encontrado.
+Função responsável pela busca de artigos a partir do título informado pelo usuário.
 
 ### CommandException
 
-Classe criada para tratar erros personalizados do sistema.
+Classe criada para tratar exceções personalizadas do sistema.
 
 ### ConsoleColor
 
-Enum utilizada para exibir mensagens coloridas no terminal.
+Enum utilizada para exibir mensagens coloridas no terminal, melhorando a experiência do usuário.
 
-### Extension ColoredText
+### ColoredText
 
-Extensão criada para facilitar a aplicação de cores nos textos exibidos.
+Extension criada para facilitar a aplicação de cores nos textos exibidos.
+
+### Logger
+
+Responsável por registrar informações, avisos e erros em arquivos de log dentro da pasta `logs`.
+
+---
+
+## Sistema de Logs
+
+A aplicação possui um sistema de logs para auxiliar na identificação de erros e no monitoramento do funcionamento do programa.
+
+Os arquivos são armazenados automaticamente na pasta:
+
+```text
+logs/
+```
+
+Exemplo de registro:
+
+```text
+[2026-06-09 14:00:00.000 - errors]
+WARNING: Artigo não encontrado.
+```
 
 ---
 
 ## Tratamento de Erros
 
-Alguns erros tratados pelo sistema:
+O sistema realiza o tratamento de diversas situações, como:
 
 * Comando inexistente
 * Artigo não encontrado
 * Título vazio
-* Problemas na comunicação com a API
+* Falha na comunicação com a API
+* Erros inesperados da aplicação
 
 Exemplo:
 
@@ -136,33 +162,42 @@ dart run teste
 Saída:
 
 ```text
-Erro: Comando "teste" não reconhecido.
+Erro: Comando não reconhecido.
 ```
 
 ---
 
 ## Evolução do Projeto
 
-| Versão | Atualização                   |
-| ------ | ----------------------------- |
-| 0.0.0  | Primeiro código (Hello World) |
-| 0.0.1  | Alteração da saudação         |
-| 0.0.2  | Comando de versão             |
-| 0.0.3  | Criação da função de ajuda    |
-| 0.0.4  | Implementação do comando help |
-| 0.0.5  | Início do comando search      |
-| 0.0.6  | Busca na Wikipedia            |
-| 0.0.7  | Tratamento de exceções        |
-| 0.0.8  | Enums e Extensions            |
-| 1.0.0  | Versão final do projeto       |
+| Versão | Atualização                       |
+| ------ | --------------------------------- |
+| 0.0.0  | Primeiro código (Hello World)     |
+| 0.0.1  | Alteração da saudação             |
+| 0.0.2  | Comando de versão                 |
+| 0.0.3  | Criação da função de ajuda        |
+| 0.0.4  | Implementação do comando help     |
+| 0.0.5  | Início do comando search          |
+| 0.0.6  | Integração com a API da Wikipedia |
+| 0.0.7  | Tratamento de exceções            |
+| 0.0.8  | Enums e Extensions                |
+| 1.0.0  | Primeira versão funcional         |
+| 1.1.0  | Busca de artigos utilizando API   |
+| 1.2.0  | Implementação do sistema de logs  |
 
 ---
 
-## Conclusão
+## Aprendizados
 
-Durante o desenvolvimento do Dartpedia CLI foi possível aprender e aplicar diversos conceitos da linguagem Dart, principalmente Programação Orientada a Objetos, consumo de APIs e tratamento de exceções.
+Durante o desenvolvimento do Dartpedia CLI foi possível aplicar conceitos importantes da linguagem Dart, como:
 
-O projeto serviu como prática para o desenvolvimento de aplicações em linha de comando e para entender melhor como ocorre a comunicação entre sistemas através de APIs.
+* Programação Orientada a Objetos
+* Consumo de APIs REST
+* Manipulação de JSON
+* Tratamento de exceções
+* Sistema de logs
+* Desenvolvimento de aplicações CLI
+
+O projeto serviu como prática para compreender melhor a comunicação entre sistemas e a organização de aplicações em Dart.
 
 ---
 
