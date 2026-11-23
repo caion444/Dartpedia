@@ -12,16 +12,16 @@ class Summary {
     this.description,
   });
 
-  TitleSet titles;
-  int pageid;
-  String extract;
-  String extractHtml;
-  String? url;
-  String lang;
-  String dir;
-  String? description;
+  final TitleSet titles;
+  final int pageid;
+  final String extract;
+  final String extractHtml;
+  final String lang;
+  final String dir;
+  final String? url;
+  final String? description;
 
-  factory Summary.fromJson(Map<String, Object?> json) {
+  static Summary fromJson(Map<String, Object?> json) {
     return switch (json) {
       {
         'titles': final Map<String, Object?> titles,
@@ -30,7 +30,6 @@ class Summary {
         'extract_html': final String extractHtml,
         'lang': final String lang,
         'dir': final String dir,
-        'description': final String description,
       } =>
         Summary(
           titles: TitleSet.fromJson(titles),
@@ -39,29 +38,13 @@ class Summary {
           extractHtml: extractHtml,
           lang: lang,
           dir: dir,
-          description: description,
+          description: json['description'] as String?,
+          url: switch (json['content_urls']) {
+            {'desktop': {'page': final String pageUrl}} => pageUrl,
+            _ => null,
+          },
         ),
-      {
-        'titles': final Map<String, Object?> titles,
-        'pageid': final int pageid,
-        'extract': final String extract,
-        'extract_html': final String extractHtml,
-        'lang': final String lang,
-        'dir': final String dir,
-      } =>
-        Summary(
-          titles: TitleSet.fromJson(titles),
-          pageid: pageid,
-          extract: extract,
-          extractHtml: extractHtml,
-          lang: lang,
-          dir: dir,
-        ),
-      _ => throw FormatException('Could not deserialize Summary, json=$json'),
+      _ => throw FormatException('Formato inválido para Summary: $json'),
     };
   }
-
-  @override
-  String toString() =>
-      'Summary[titles=$titles, pageid=$pageid, extract=$extract, description=$description]';
 }

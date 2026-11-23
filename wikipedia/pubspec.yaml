@@ -1,16 +1,13 @@
 name: wikipedia
-description: A starting point for Dart libraries or applications.
-version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+description: Modelos de dados JSON e servicos da API Wikipedia para o Dartpedia.
+version: 0.1.0
+resolution: workspace
 
 environment:
-  sdk: ^3.14.0
+  sdk: ^3.5.0
 
-# Add regular dependencies here.
 dependencies:
-  http: ^1.6.0
-  # path: ^1.9.0
+  http: ^1.2.2
 
 dev_dependencies:
-  lints: ^6.0.0
-  test: ^1.33.0
+  test: ^1.25.0

@@ -1,0 +1,10 @@
+name: dartpedia_workspace
+publish_to: none
+
+environment:
+  sdk: ^3.5.0
+
+workspace:
+  - cli
+  - command_runner
+  - wikipedia

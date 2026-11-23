@@ -5,27 +5,23 @@ class TitleSet {
     required this.display,
   });
 
-  String canonical;
-  String normalized;
-  String display;
+  final String canonical;
+  final String normalized;
+  final String display;
 
-  factory TitleSet.fromJson(Map<String, Object?> json) {
-    if (json
-        case {
-          'canonical': final String canonical,
-          'normalized': final String normalized,
-          'display': final String display,
-        }) {
-      return TitleSet(
-        canonical: canonical,
-        normalized: normalized,
-        display: display,
-      );
-    }
-    throw FormatException('Could not deserialize TitleSet, json=$json');
+  static TitleSet fromJson(Map<String, Object?> json) {
+    return switch (json) {
+      {
+        'canonical': final String canonical,
+        'normalized': final String normalized,
+        'display': final String display,
+      } =>
+        TitleSet(
+          canonical: canonical,
+          normalized: normalized,
+          display: display,
+        ),
+      _ => throw FormatException('Formato inválido para TitleSet: $json'),
+    };
   }
-
-  @override
-  String toString() =>
-      'TitleSet[canonical=$canonical, normalized=$normalized, display=$display]';
 }
