@@ -17,11 +17,13 @@
       "version": "1.0.0",
       "dependencies": [
         "command_runner",
-        "http"
+        "http",
+        "wikipedia"
       ],
       "devDependencies": [
         "lints",
-        "test"
+        "test",
+        "wikipedia"
       ]
     },
     {
