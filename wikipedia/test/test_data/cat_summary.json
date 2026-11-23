@@ -1,0 +1,16 @@
+{
+  "type": "standard",
+  "title": "Cat",
+  "displaytitle": "<span class=\"mw-page-title-main\">Cat</span>",
+  "titles": {
+    "canonical": "Cat",
+    "normalized": "Cat",
+    "display": "<span class=\"mw-page-title-main\">Cat</span>"
+  },
+  "pageid": 6678,
+  "lang": "en",
+  "dir": "ltr",
+  "description": "Domesticated feline mammal",
+  "extract": "The cat (Felis catus), also referred to as the domestic cat or house cat, is a small domesticated carnivorous mammal.",
+  "extract_html": "<p>The <b>cat</b> (<i>Felis catus</i>) is a small domesticated carnivorous mammal.</p>"
+}
