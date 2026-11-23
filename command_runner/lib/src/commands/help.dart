@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:command_runner/command_runner.dart';
 
 class HelpCommand extends Command {
@@ -11,7 +12,8 @@ class HelpCommand extends Command {
     addOption(
       'command',
       abbr: 'c',
-      help: 'When a command is passed as an argument, prints only that command\'s usage.',
+      help:
+          'When a command is passed as an argument, prints only that command\'s usage.',
     );
   }
 
@@ -26,10 +28,50 @@ class HelpCommand extends Command {
 
   @override
   FutureOr<Object?> run(ArgResults args) async {
-    var usage = runner.usage;
-    for (var command in runner.commands) {
-      usage += '\n ${command.usage}';
+    final buffer = StringBuffer();
+    buffer.writeln(runner.usage.titleText);
+
+    if (args.flag('verbose')) {
+      for (var cmd in runner.commands) {
+        buffer.write('\n${_renderCommandVerbose(cmd)}');
+      }
+      return buffer.toString();
     }
-    return usage;
+
+    if (args.hasOption('command')) {
+      var (:option, :value) = args.getOption('command');
+      var cmd = runner.commands.firstWhere(
+        (command) => command.name == value,
+        orElse: () {
+          throw ArgumentException(
+            'Input ${args.commandArg} is not a known command.',
+          );
+        },
+      );
+      return _renderCommandVerbose(cmd);
+    }
+
+    for (var command in runner.commands) {
+      buffer.writeln(command.usage);
+    }
+
+    return buffer.toString();
+  }
+
+  String _renderCommandVerbose(Command cmd) {
+    final indent = ' ' * 10;
+    final buffer = StringBuffer();
+    buffer.writeln(cmd.usage.instructionText);
+    buffer.writeln('$indent ${cmd.help}');
+    if (cmd.valueHelp != null) {
+      buffer.writeln(
+        '$indent [Argument] Required? ${cmd.requiresArgument}. Type: ${cmd.valueHelp}, Default: ${cmd.defaultValue ?? 'none'}',
+      );
+    }
+    buffer.writeln('$indent Options:');
+    for (var option in cmd.options) {
+      buffer.writeln('$indent ${option.usage}');
+    }
+    return buffer.toString();
   }
 }
